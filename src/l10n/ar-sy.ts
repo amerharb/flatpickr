@@ -1,5 +1,7 @@
 /**
  * Syrian Arabic locals for flatpickr, also included others local in the region: Lebanon, Jordan, Palestine and Iraq
+ * source (en): https://en.wikipedia.org/wiki/Assyrian_calendar
+ * source (ar): https://ar.wikipedia.org/wiki/شهور_سريانية
  */
 import { CustomLocale } from "../types/locale";
 import { FlatpickrFn } from "../types/instance";
