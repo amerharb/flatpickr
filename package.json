@@ -1,6 +1,6 @@
 {
   "name": "@penni/flatpickr",
-  "version": "4.7.0-useUtcTimezone.1",
+  "version": "4.7.0-useUtcTimezone.2",
   "private": true,
   "description": "A lightweight, powerful javascript datetime picker",
   "scripts": {
