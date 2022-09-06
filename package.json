@@ -65,6 +65,9 @@
   "bugs": {
     "url": "https://github.com/chmln/flatpickr/issues"
   },
+  "publishConfig": {
+    "registry": "https://npm-registry.penni.io"
+  },
   "homepage": "https://flatpickr.js.org",
   "keywords": [
     "javascript",
