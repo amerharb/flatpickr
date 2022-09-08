@@ -40,15 +40,31 @@ import "./utils/polyfills";
 
 const DEBOUNCED_CHANGE_MS = 300;
 
+/* istanbul ignore next */
+var flatpickr = function (
+  selector: ArrayLike<Node> | Node | string,
+  config?: Options
+) {
+  if (typeof selector === "string") {
+    return _flatpickr(window.document.querySelectorAll(selector), config);
+  } else if (selector instanceof Node) {
+    return _flatpickr([selector], config);
+  } else {
+    return _flatpickr(selector, config);
+  }
+} as FlatpickrFn;
+
+const config = {
+  ...defaultOptions,
+  ...flatpickr.defaultConfig,
+} as ParsedOptions
+
 function FlatpickrInstance(
   element: HTMLElement,
   instanceConfig?: Options
 ): Instance {
   const self = {
-    config: {
-      ...defaultOptions,
-      ...flatpickr.defaultConfig,
-    } as ParsedOptions,
+    config,
     l10n: English,
   } as Instance;
   self.parseDate = createDateParser({ config: self.config, l10n: self.l10n });
@@ -842,22 +858,6 @@ function FlatpickrInstance(
     } else {
       getNextAvailableDay(startElem, offset);
     }
-  }
-
-  function newDateFromEpoch(value: number) {
-    const newDate = new Date(value);
-    if (self.config.useUTC) {
-      return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
-    }
-    return newDate;
-  }
-
-  function newDateFromYMD(year: number, month: number, day: number) {
-    const newDate = new Date(year, month, day);
-    if (self.config.useUTC) {
-      return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
-    }
-    return newDate;
   }
 
   function buildMonthDays(year: number, month: number) {
@@ -2996,20 +2996,6 @@ if (
 }
 
 /* istanbul ignore next */
-var flatpickr = function (
-  selector: ArrayLike<Node> | Node | string,
-  config?: Options
-) {
-  if (typeof selector === "string") {
-    return _flatpickr(window.document.querySelectorAll(selector), config);
-  } else if (selector instanceof Node) {
-    return _flatpickr([selector], config);
-  } else {
-    return _flatpickr(selector, config);
-  }
-} as FlatpickrFn;
-
-/* istanbul ignore next */
 flatpickr.defaultConfig = {};
 
 flatpickr.l10ns = {
@@ -3048,6 +3034,22 @@ Date.prototype.fp_incr = function (days: number | string) {
     this.getDate() + (typeof days === "string" ? parseInt(days, 10) : days)
   );
 };
+
+function newDateFromEpoch(value: number) {
+  const newDate = new Date(value);
+  if (config.useUTC) {
+    return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+  }
+  return newDate;
+}
+
+function newDateFromYMD(year: number, month: number, day: number) {
+  const newDate = new Date(year, month, day);
+  if (config.useUTC) {
+    return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+  }
+  return newDate;
+}
 
 if (typeof window !== "undefined") {
   window.flatpickr = flatpickr;
