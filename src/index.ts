@@ -844,6 +844,12 @@ function FlatpickrInstance(
     }
   }
 
+  function newDate(year: number, month: number, day: number) {
+    if (self.config.useUTC)
+      return new Date(Date.UTC(year, month, day));
+    return new Date(year, month, day);
+  }
+
   function buildMonthDays(year: number, month: number) {
     const firstOfMonth =
       (new Date(year, month, 1).getDay() - self.l10n.firstDayOfWeek + 7) % 7;
@@ -867,9 +873,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           `flatpickr-day ${prevMonthDayClass}`,
-          self.config.useUTC
-            ? new Date(Date.UTC(year, month - 1, dayNumber))
-            : new Date(year, month - 1, dayNumber),
+          newDate(year, month - 1, dayNumber),
           dayNumber,
           dayIndex
         )
@@ -881,9 +885,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           "flatpickr-day",
-          self.config.useUTC
-            ? new Date(Date.UTC(year, month, dayNumber))
-            : new Date(year, month, dayNumber),
+          newDate(year, month, dayNumber),
           dayNumber,
           dayIndex
         )
@@ -900,9 +902,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           `flatpickr-day ${nextMonthDayClass}`,
-          self.config.useUTC
-            ? new Date(Date.UTC(year, month + 1, dayNum % daysInMonth))
-            : new Date(year, month + 1, dayNum % daysInMonth),
+          newDate(year, month + 1, dayNum % daysInMonth),
           dayNum,
           dayIndex
         )
@@ -930,9 +930,7 @@ function FlatpickrInstance(
     const frag = document.createDocumentFragment();
 
     for (let i = 0; i < self.config.showMonths; i++) {
-      const d = self.config.useUTC
-        ? new Date(Date.UTC(self.currentYear, self.currentMonth, 1))
-        : new Date(self.currentYear, self.currentMonth, 1);
+      const d = newDate(self.currentYear, self.currentMonth, 1);
       d.setMonth(self.currentMonth + i);
 
       frag.appendChild(buildMonthDays(d.getFullYear(), d.getMonth()));
@@ -2785,9 +2783,7 @@ function FlatpickrInstance(
     if (self.config.noCalendar || self.isMobile || !self.monthNav) return;
 
     self.yearElements.forEach((yearElement, i) => {
-      const d = self.config.useUTC
-        ? new Date(Date.UTC(self.currentYear, self.currentMonth, 1))
-        : new Date(self.currentYear, self.currentMonth, 1);
+      const d = newDate(self.currentYear, self.currentMonth, 1);
       d.setMonth(self.currentMonth + i);
 
       if (
