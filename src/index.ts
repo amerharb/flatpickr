@@ -844,7 +844,15 @@ function FlatpickrInstance(
     }
   }
 
-  function newDate(year: number, month: number, day: number) {
+  function newDateFromEpoch(value: number) {
+    const newDate = new Date(value);
+    if (self.config.useUTC) {
+      return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+    }
+    return newDate;
+  }
+
+  function newDateFromYMD(year: number, month: number, day: number) {
     const newDate = new Date(year, month, day);
     if (self.config.useUTC) {
       return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
@@ -875,7 +883,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           `flatpickr-day ${prevMonthDayClass}`,
-          newDate(year, month - 1, dayNumber),
+          newDateFromYMD(year, month - 1, dayNumber),
           dayNumber,
           dayIndex
         )
@@ -887,7 +895,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           "flatpickr-day",
-          newDate(year, month, dayNumber),
+          newDateFromYMD(year, month, dayNumber),
           dayNumber,
           dayIndex
         )
@@ -904,7 +912,7 @@ function FlatpickrInstance(
       days.appendChild(
         createDay(
           `flatpickr-day ${nextMonthDayClass}`,
-          newDate(year, month + 1, dayNum % daysInMonth),
+          newDateFromYMD(year, month + 1, dayNum % daysInMonth),
           dayNum,
           dayIndex
         )
@@ -932,7 +940,7 @@ function FlatpickrInstance(
     const frag = document.createDocumentFragment();
 
     for (let i = 0; i < self.config.showMonths; i++) {
-      const d = newDate(self.currentYear, self.currentMonth, 1);
+      const d = newDateFromYMD(self.currentYear, self.currentMonth, 1);
       d.setMonth(self.currentMonth + i);
 
       frag.appendChild(buildMonthDays(d.getFullYear(), d.getMonth()));
@@ -1848,7 +1856,7 @@ function FlatpickrInstance(
       maxRange = 0;
 
     for (let t = rangeStartDate; t < rangeEndDate; t += duration.DAY) {
-      if (!isEnabled(new Date(t), true)) {
+      if (!isEnabled(newDateFromEpoch(t), true)) {
         containsDisabled =
           containsDisabled || (t > rangeStartDate && t < rangeEndDate);
 
@@ -2340,7 +2348,7 @@ function FlatpickrInstance(
 
     const target = t as DayElement;
 
-    const selectedDate = (self.latestSelectedDateObj = new Date(
+    const selectedDate = (self.latestSelectedDateObj = newDateFromEpoch(
       target.dateObj.getTime()
     ));
 
@@ -2785,7 +2793,7 @@ function FlatpickrInstance(
     if (self.config.noCalendar || self.isMobile || !self.monthNav) return;
 
     self.yearElements.forEach((yearElement, i) => {
-      const d = newDate(self.currentYear, self.currentMonth, 1);
+      const d = newDateFromYMD(self.currentYear, self.currentMonth, 1);
       d.setMonth(self.currentMonth + i);
 
       if (
