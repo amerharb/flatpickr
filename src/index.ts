@@ -845,9 +845,11 @@ function FlatpickrInstance(
   }
 
   function newDate(year: number, month: number, day: number) {
-    if (self.config.useUTC)
-      return new Date(Date.UTC(year, month, day));
-    return new Date(year, month, day);
+    const newDate = new Date(year, month, day);
+    if (self.config.useUTC) {
+      return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+    }
+    return newDate;
   }
 
   function buildMonthDays(year: number, month: number) {
