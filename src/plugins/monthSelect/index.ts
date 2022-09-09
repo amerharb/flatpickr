@@ -64,18 +64,22 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
       );
     }
 
-		function newDate(): Date {
-			const newDate = new Date()
-			if (fp.config.useUTC) {
-					return newDate
-			}
-			return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
-		}
+    function newDate(): Date {
+      const newDate = new Date();
+      if (fp.config.useUTC) {
+        return newDate;
+      }
+      return new Date(
+        newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+      );
+    }
 
     function newDateFromYMD(year: number, month: number, day: number) {
       const newDate = new Date(year, month, day);
       if (fp.config.useUTC) {
-        return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+        return new Date(
+          newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+        );
       }
       return newDate;
     }
@@ -83,7 +87,9 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
     function newDateFromYM(year: number, month: number) {
       const newDate = new Date(year, month);
       if (fp.config.useUTC) {
-        return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+        return new Date(
+          newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+        );
       }
       return newDate;
     }
@@ -91,7 +97,9 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
     function newDateFromDate(date: Date) {
       const newDate = new Date(date);
       if (fp.config.useUTC) {
-        return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+        return new Date(
+          newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+        );
       }
       return newDate;
     }
@@ -193,7 +201,7 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
     function selectYear() {
       let selectedDate = fp.selectedDates[0];
       if (selectedDate) {
-				selectedDate = newDateFromDate(selectedDate)
+        selectedDate = newDateFromDate(selectedDate);
         selectedDate.setFullYear(fp.currentYear);
         if (fp.config.minDate && selectedDate < fp.config.minDate) {
           selectedDate = fp.config.minDate;
@@ -247,7 +255,11 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
     }
 
     function setMonth(date: Date) {
-      const selectedDate = newDateFromYMD(fp.currentYear, date.getMonth(), date.getDate());
+      const selectedDate = newDateFromYMD(
+        fp.currentYear,
+        date.getMonth(),
+        date.getDate()
+      );
       let selectedDates: Date[] = [];
 
       switch (fp.config.mode) {

@@ -57,7 +57,7 @@ var flatpickr = function (
 const config = {
   ...defaultOptions,
   ...flatpickr.defaultConfig,
-} as ParsedOptions
+} as ParsedOptions;
 
 function FlatpickrInstance(
   element: HTMLElement,
@@ -3038,7 +3038,9 @@ Date.prototype.fp_incr = function (days: number | string) {
 function newDateFromEpoch(value: number) {
   const newDate = new Date(value);
   if (config.useUTC) {
-    return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+    return new Date(
+      newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+    );
   }
   return newDate;
 }
@@ -3046,7 +3048,9 @@ function newDateFromEpoch(value: number) {
 function newDateFromYMD(year: number, month: number, day: number) {
   const newDate = new Date(year, month, day);
   if (config.useUTC) {
-    return new Date(newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000);
+    return new Date(
+      newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+    );
   }
   return newDate;
 }
