@@ -197,9 +197,9 @@ function FlatpickrInstance(
     if (self.selectedDates.length === 0) {
       const defaultDate =
         self.config.minDate === undefined ||
-        compareDates(new Date(), self.config.minDate) >= 0
-          ? new Date()
-          : new Date(self.config.minDate.getTime());
+        compareDates(newDate(), self.config.minDate) >= 0
+          ? newDate()
+          : newDateFromEpoch(self.config.minDate.getTime());
 
       const defaults = getDefaultHours(self.config);
       defaultDate.setHours(
@@ -862,7 +862,7 @@ function FlatpickrInstance(
 
   function buildMonthDays(year: number, month: number) {
     const firstOfMonth =
-      (new Date(year, month, 1).getDay() - self.l10n.firstDayOfWeek + 7) % 7;
+      (newDateFromYMD(year, month, 1).getDay() - self.l10n.firstDayOfWeek + 7) % 7;
 
     const prevMonthDays = self.utils.getDaysInMonth(
       (month - 1 + 12) % 12,
@@ -989,7 +989,7 @@ function FlatpickrInstance(
         "flatpickr-monthDropdown-month"
       );
 
-      month.value = new Date(self.currentYear, i).getMonth().toString();
+      month.value = newDateFromYM(self.currentYear, i).getMonth().toString();
       month.textContent = monthToStr(
         i,
         self.config.shorthandCurrentMonth,
@@ -2578,7 +2578,7 @@ function FlatpickrInstance(
 
   function setupDates() {
     self.selectedDates = [];
-    self.now = self.parseDate(self.config.now) || new Date();
+    self.now = self.parseDate(self.config.now) || newDate();
 
     // Workaround IE11 setting placeholder as the input's value
     const preloadedDate =
@@ -3028,12 +3028,22 @@ if (typeof jQuery !== "undefined" && typeof jQuery.fn !== "undefined") {
 }
 
 Date.prototype.fp_incr = function (days: number | string) {
-  return new Date(
+  return newDateFromYMD(
     this.getFullYear(),
     this.getMonth(),
     this.getDate() + (typeof days === "string" ? parseInt(days, 10) : days)
   );
 };
+
+function newDate() {
+  const newDate = new Date();
+  if (config.useUTC) {
+    return new Date(
+      newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+    );
+  }
+  return newDate;
+}
 
 function newDateFromEpoch(value: number) {
   const newDate = new Date(value);
@@ -3047,6 +3057,16 @@ function newDateFromEpoch(value: number) {
 
 function newDateFromYMD(year: number, month: number, day: number) {
   const newDate = new Date(year, month, day);
+  if (config.useUTC) {
+    return new Date(
+      newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
+    );
+  }
+  return newDate;
+}
+
+function newDateFromYM(year: number, month: number) {
+  const newDate = new Date(year, month);
   if (config.useUTC) {
     return new Date(
       newDate.valueOf() - newDate.getTimezoneOffset() * 60 * 1000
